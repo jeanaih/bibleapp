@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible app</title>
+
+    <!-- Welcome and Greeting Scripts -->
+    <script>
+        // Set a flag to prevent duplicate greetings
+        window.hasShownGreeting = false;
+    </script>
+    <script src="js/greeting.js" defer></script>
+    <script src="js/welcome.js" defer></script>
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/welcome-modal.css">
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+Pro:wght@400;600&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Top Loading Bar -->
+    <div class="loading-bar" id="loadingBar">
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal for New Users -->
+    <div id="welcomeModal" class="welcome-modal">
+        <div id="welcomeContent" class="welcome-modal-content">
+            <h2>Welcome to Life Bible App</h2>
+            <p>What should I call you?</p>
+            <input type="text" id="userNameInput" placeholder="Enter your name" maxlength="30">
+            <button id="saveNameBtn">Continue</button>
+        </div>
+    </div>
+
+
+    <div id="app">
+        <div id="content" class="content-container">
+            <!-- Content loaded by menu.js -->
+        </div>
+
+        <!-- Bottom Menu -->
+        <nav class="bottom-menu">
+            <a href="#home" class="menu-item" data-page="home.html">
+                <i class="bi bi-house-fill"></i>
+                <span>Home</span>
+            </a>
+            <a href="#bible" class="menu-item" data-page="bible.html">
+                <i class="bi bi-book-fill"></i>
+                <span>Bible</span>
+            </a>
+            <a href="#daily" class="menu-item" data-page="daily-verse.html" id="daily-btn">
+                <i class="bi bi-calendar-heart-fill"></i>
+                <span>Daily</span>
+            </a>
+            <a href="#life" class="menu-item" data-page="Life.html">
+                <i class="bi bi-journal-bookmark-fill"></i>
+                <span>Life</span>
+            </a>
+
+            <a href="#profile" class="menu-item" data-page="profile-new.html" id="profile-menu">
+                <i class="bi bi-person-circle" id="profileIcon"></i>
+                <img id="profileMenuPhoto" class="profile-menu-photo" alt="" style="display: none;" />
+                <span>Profile</span>
+            </a>
+        </nav>
+
+    </div>
+
+    <!-- Action bar (visible on daily page only) -->
+    <div class="action-bar" aria-hidden="false">
+        <button id="idx-heart" class="action-icon" title="React" aria-pressed="false">
+            <i class="bi bi-heart"></i>
+        </button>
+        <button id="idx-read" class="action-icon" title="Read Full" aria-label="Read Full">
+            <i class="bi bi-book"></i>
+        </button>
+        <button id="idx-save" class="action-icon" title="Save" aria-pressed="false">
+            <i class="bi bi-bookmark"></i>
+        </button>
+    </div>
+
+    <!-- ✅ Enhanced SPA Page Loader -->
+    <script>
+        async function loadPage(pageName, forceReload = false) {
+            try {
+                // Show loading bar
+                const loadingBar = document.getElementById('loadingBar');
+                loadingBar.classList.add('active');
+
+                // Add loading class to fade out current content
+                const container = document.getElementById('content');
+                container.classList.add('page-loading');
+
+                // Show loading spinner
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'loading-overlay show';
+                loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+                container.appendChild(loadingOverlay);
+
+                const url = forceReload ? `pages/${pageName}?_=${Date.now()}` : `pages/${pageName}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Page not found: ${pageName}`);
+                const content = await response.text();
+
+                const temp = document.createElement('div');
+                temp.innerHTML = content;
+
+                const inlineScripts = Array.from(temp.querySelectorAll('script:not([src])')).map(s => s.textContent);
+                const externalSrcs = Array.from(temp.querySelectorAll('script[src]')).map(s => s.getAttribute('src'));
+                temp.querySelectorAll('script').forEach(s => s.remove());
+
+                // Replace content
+                container.innerHTML = temp.innerHTML;
+
+                // Remove loading overlay
+                container.appendChild(loadingOverlay);
+
+                // Run inline scripts
+                inlineScripts.forEach(code => {
+                    const s = document.createElement('script');
+                    s.text = code;
+                    document.body.appendChild(s);
+                    setTimeout(() => s.remove(), 0);
+                });
+
+                // Helper for script injection
+                function ensureExternalScript(src, dataName, initFn) {
+                    const existing = Array.from(document.querySelectorAll('script')).find(el =>
+                        (el.dataset && el.dataset.name === dataName) || el.getAttribute('src') === src
+                    );
+
+                    if (forceReload && existing) existing.remove();
+
+                    if (!existing || forceReload) {
+                        const s = document.createElement('script');
+                        s.src = src;
+                        if (dataName) s.dataset.name = dataName;
+                        s.onload = () => {
+                            if (initFn && typeof window[initFn] === 'function') window[initFn]();
+                        };
+                        document.body.appendChild(s);
+                    } else {
+                        if (initFn && typeof window[initFn] === 'function') window[initFn]();
+                    }
+                }
+
+                // Handle known scripts
+                externalSrcs.forEach(src => {
+                    if (src.includes('daily.js')) ensureExternalScript(src, 'daily-js', 'initDailyVerse');
+                    else if (src.includes('bible.js')) ensureExternalScript(src, 'bible-js', 'initializeBible');
+                    else ensureExternalScript(src, `ext-${src}`, null);
+                });
+
+                if (pageName === 'daily-verse.html') ensureExternalScript('js/daily.js', 'daily-js', 'initDailyVerse');
+                else if (pageName === 'bible.html') ensureExternalScript('js/bible.js', 'bible-js', 'initializeBible');
+
+                // 🔹 Save last visited page
+                localStorage.setItem('lastPage', pageName);
+
+                // Update menu highlight
+                document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+                const activeItem = document.querySelector(`.menu-item[data-page="${pageName}"]`);
+                if (activeItem) activeItem.classList.add('active');
+
+                // Smooth fade-in animation after content loads
+                setTimeout(() => {
+                    if (loadingOverlay.parentNode) {
+                        loadingOverlay.remove();
+                    }
+                    container.classList.remove('page-loading');
+
+                    // Hide loading bar
+                    loadingBar.classList.remove('active');
+                }, 150);
+
+            } catch (err) {
+                console.error('Error loading page:', err);
+                const container = document.getElementById('content');
+                container.innerHTML = '<p>Error loading page content.</p>';
+                container.classList.remove('page-loading');
+                const loadingOverlay = container.querySelector('.loading-overlay');
+                if (loadingOverlay) loadingOverlay.remove();
+                // Hide loading bar on error
+                document.getElementById('loadingBar').classList.remove('active');
+            }
+        }
+
+        // On first load → open last visited page or home
+        document.addEventListener('DOMContentLoaded', () => {
+            const last = localStorage.getItem('lastPage') || 'home.html';
+            loadPage(last);
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (item.getAttribute('data-page') === last) item.classList.add('active');
+            });
+        });
+
+        // Menu click handling - full page reload version
+        document.addEventListener('click', e => {
+            const target = e.target.closest('.menu-item');
+            if (!target) return;
+            e.preventDefault();
+
+            const page = target.getAttribute('data-page');
+            localStorage.setItem('lastPage', page);
+            window.location.href = window.location.pathname + `?page=${page}`;
+            window.location.reload();
+        });
+    </script>
+
+    <!-- ❤️ Action bar script -->
+    <script>
+        (function () {
+            const heartBtn = document.getElementById('idx-heart');
+            const readBtn = document.getElementById('idx-read');
+            const saveBtn = document.getElementById('idx-save');
+            const actionBar = document.querySelector('.action-bar');
+            const contentEl = document.getElementById('content');
+
+            function updateActionBarVisibility() {
+                const dailyVisible = !!document.querySelector('#verse-text');
+                if (!actionBar) return;
+                actionBar.style.display = dailyVisible ? 'flex' : 'none';
+
+                // Check if verse is hearted
+                if (dailyVisible) {
+                    checkDailyVerseHeart();
+                }
+            }
+
+            function checkDailyVerseHeart() {
+                const verseRefEl = document.getElementById('verse-ref');
+                if (!verseRefEl) return;
+
+                const verseRef = verseRefEl.textContent.trim();
+                const match = verseRef.match(/^(.+?)\s+(\d+):(\d+)$/);
+
+                if (match) {
+                    const [, book, chapter, verse] = match;
+                    const verseKey = `${book}:${chapter}:${verse}`;
+                    const heartedVerses = JSON.parse(localStorage.getItem('heartedVerses') || '{}');
+                    const icon = heartBtn.querySelector('i');
+
+                    if (heartedVerses[verseKey]) {
+                        icon.classList.remove('bi-heart');
+                        icon.classList.add('bi-heart-fill');
+                        heartBtn.classList.add('liked');
+                    } else {
+                        icon.classList.remove('bi-heart-fill');
+                        icon.classList.add('bi-heart');
+                        heartBtn.classList.remove('liked');
+                    }
+                }
+            }
+
+            if (contentEl) {
+                const mo = new MutationObserver(updateActionBarVisibility);
+                mo.observe(contentEl, { childList: true, subtree: true });
+            }
+            window.addEventListener('hashchange', updateActionBarVisibility);
+            document.addEventListener('DOMContentLoaded', updateActionBarVisibility);
+            setTimeout(updateActionBarVisibility, 250);
+
+            function spawnBigHeart() {
+                const big = document.createElement('div');
+                big.className = 'big-heart';
+                big.innerHTML = '<i class="bi bi-heart-fill"></i>';
+                document.body.appendChild(big);
+                requestAnimationFrame(() => big.classList.add('show'));
+                big.addEventListener('animationend', () => big.remove(), { once: true });
+            }
+
+            heartBtn.addEventListener('click', () => {
+                const icon = heartBtn.querySelector('i');
+                const verseRefEl = document.getElementById('verse-ref');
+
+                if (verseRefEl) {
+                    const verseRef = verseRefEl.textContent.trim();
+                    const match = verseRef.match(/^(.+?)\s+(\d+):(\d+)$/);
+
+                    if (match) {
+                        const [, book, chapter, verse] = match;
+                        const verseKey = `${book}:${chapter}:${verse}`;
+                        const heartedVerses = JSON.parse(localStorage.getItem('heartedVerses') || '{}');
+
+                        if (heartedVerses[verseKey]) {
+                            delete heartedVerses[verseKey];
+                            icon.classList.replace('bi-heart-fill', 'bi-heart');
+                            heartBtn.classList.remove('liked');
+                        } else {
+                            heartedVerses[verseKey] = Date.now();
+                            icon.classList.replace('bi-heart', 'bi-heart-fill');
+                            heartBtn.classList.add('liked');
+                            spawnBigHeart();
+                        }
+
+                        localStorage.setItem('heartedVerses', JSON.stringify(heartedVerses));
+                    }
+                }
+            });
+
+            saveBtn.addEventListener('click', () => {
+                const icon = saveBtn.querySelector('i');
+                const verseTextEl = document.getElementById('verse-text');
+                const verseRefEl = document.getElementById('verse-ref');
+
+                if (verseTextEl && verseRefEl) {
+                    const verseText = verseTextEl.textContent.trim();
+                    const verseRef = verseRefEl.textContent.trim();
+
+                    if (verseText && verseRef) {
+                        const savedVerses = JSON.parse(localStorage.getItem('savedVerses') || '[]');
+                        const alreadySaved = savedVerses.some(v => v.reference === verseRef);
+
+                        if (!alreadySaved) {
+                            savedVerses.unshift({
+                                reference: verseRef,
+                                text: verseText,
+                                timestamp: Date.now()
+                            });
+                            localStorage.setItem('savedVerses', JSON.stringify(savedVerses));
+                            icon.classList.replace('bi-bookmark', 'bi-bookmark-fill');
+                            saveBtn.classList.add('saved');
+                        } else {
+                            const index = savedVerses.findIndex(v => v.reference === verseRef);
+                            savedVerses.splice(index, 1);
+                            localStorage.setItem('savedVerses', JSON.stringify(savedVerses));
+                            icon.classList.replace('bi-bookmark-fill', 'bi-bookmark');
+                            saveBtn.classList.remove('saved');
+                        }
+                    }
+                }
+            });
+
+            readBtn.addEventListener('click', () => {
+                const verseRefEl = document.getElementById('verse-ref');
+
+                if (verseRefEl) {
+                    const verseRef = verseRefEl.textContent.trim();
+                    const match = verseRef.match(/^(.+?)\s+(\d+):(\d+)$/);
+
+                    if (match) {
+                        const [, book, chapter, verse] = match;
+                        localStorage.setItem('navigateToVerse', JSON.stringify({
+                            book: book,
+                            chapter: chapter,
+                            verse: verse
+                        }));
+
+                        localStorage.setItem('lastPage', 'bible.html');
+                        window.location.href = window.location.pathname + `?page=bible.html`;
+                        window.location.reload();
+                        return;
+                    }
+                }
+
+                const bibleItem = document.querySelector('.bottom-menu a[data-page="bible.html"]');
+                if (bibleItem) bibleItem.click();
+                else location.hash = '#bible';
+            });
+        })();
+    </script>
+
+    <!-- Menu Profile Script -->
+    <script>
+        (function () {
+            function loadMenuProfile() {
+                const profile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                const profileIcon = document.getElementById('profileIcon');
+                const profilePhoto = document.getElementById('profileMenuPhoto');
+
+                if (profile.photo && profileIcon && profilePhoto) {
+                    // Has photo - show photo, hide icon
+                    profilePhoto.src = profile.photo;
+                    profilePhoto.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                } else if (profileIcon && profilePhoto) {
+                    // No photo - show icon, hide photo
+                    profilePhoto.style.display = 'none';
+                    profileIcon.style.display = 'block';
+                }
+            }
+
+            // Load profile on page load
+            loadMenuProfile();
+
+            // Refresh on storage change
+            window.addEventListener('storage', loadMenuProfile);
+
+            // Reload when returning to page
+            window.addEventListener('focus', loadMenuProfile);
+        })();
+    </script>
+
+    <!-- Apply dark mode on page load -->
+    <script>
+        (function () {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
+</body>
+
+</html>

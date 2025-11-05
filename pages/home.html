@@ -1,0 +1,59 @@
+<section class="page home-page" id="homePage">
+    <!-- Animated Intro Overlay -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-text" id="introText1"></div>
+        <div class="intro-text" id="introText2"></div>
+    </div>
+
+    <div class="main-content">
+        <!-- Center Content Wrapper -->
+        <div class="center-content-wrapper">
+            <!-- Smart Search Bar -->
+            <div class="home-search-container">
+                <div class="home-search-wrapper">
+                    <input type="search" id="homeSearch" class="home-search-input" placeholder="Search"
+                        autocomplete="off">
+                    <button class="search-go-btn" id="searchGoBtn" style="display: none;">
+                        <i class="bi bi-arrow-right-circle-fill"></i>
+                    </button>
+                    <button class="clear-search" id="clearHomeSearch" style="display: none;">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+                <div id="homeSearchResults" class="home-search-results"></div>
+            </div>
+
+            <div class="iframe-container" id="dailyEmbed">
+                <iframe src="pages/daily-verse.html" frameborder="0" class="daily-verse-frame"
+                    title="Daily Verse"></iframe>
+                <div class="view-overlay"></div>
+            </div>
+        </div>
+
+        <div class="tiles">
+            <button class="tile tile-streak" title="Streak" id="streakTile">
+                <div class="streak-fill"></div>
+                <i class="bi bi-fire"></i>
+                <span id="streakCount" class="tile-value">0</span>
+            </button>
+
+            <button class="tile tile-notes" title="My Notes" id="notesTile">
+                <i class="bi bi-journal-text"></i>
+                <span class="tile-label">Notes</span>
+            </button>
+
+            <button class="tile tile-saved" title="Saved Verses" id="savedTile">
+                <i class="bi bi-bookmark-fill"></i>
+                <span class="tile-label">Saved</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<style>
+
+</style>
+
+<script src="../js/notifications.js"></script>
+<script src="../js/home.js"></script>
+<link rel="stylesheet" href="css/home.css">
