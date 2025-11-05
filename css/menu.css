@@ -1,0 +1,107 @@
+/* ⚡️ Bottom Menu - Slim, Centered, Always Consistent */
+.bottom-menu {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Profile Menu Photo */
+.profile-menu-photo {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--royal-blue);
+}
+
+#profile-menu {
+    position: relative;
+}
+
+#profile-menu i,
+#profile-menu img {
+    display: block;
+}
+
+/* --- Menu Item --- */
+.menu-item {
+    text-decoration: none;
+    color: #757575;
+    text-align: center;
+    font-size: 0.85rem;
+    /* slightly smaller */
+    flex: 1;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+}
+
+.menu-item i {
+    display: block;
+    font-size: 1.4rem;
+    /* slightly smaller icon */
+    margin-bottom: 2px;
+}
+
+.menu-item.active {
+    color: var(--royal-blue);
+    font-weight: 600;
+}
+
+.menu-item:hover {
+    color: var(--royal-blue-light);
+    transform: translateY(-2px);
+}
+
+/* 📱 Responsive adjustments (mobile view) */
+@media screen and (max-width: 600px) {
+    .bottom-menu {
+        bottom: 0;
+        width: 100%;
+        border-radius: 0;
+        /* flat on mobile */
+        box-shadow: 0 -4px 20px rgba(26, 35, 126, 0.05);
+        padding: 8px 0;
+        /* slimmer on mobile */
+    }
+
+    .menu-item {
+        font-size: 0.75rem;
+        min-width: 44px;
+    }
+
+    .menu-item i {
+        font-size: 1.2rem;
+        margin-bottom: 1px;
+    }
+}
+
+/* 🧭 Extra small screens (hide text if too narrow) */
+@media screen and (max-width: 360px) {
+    .menu-item span {
+        display: none;
+    }
+
+    .menu-item i {
+        margin-bottom: 0;
+    }
+}

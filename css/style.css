@@ -1,0 +1,1381 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+Pro:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap');
+
+/* Hide scrollbars for all elements */
+* {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Hide scrollbars for Webkit browsers */
+*::-webkit-scrollbar {
+    display: none;
+}
+
+/* Remove mobile tap highlight and default focus rings for a more app-like feel */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove focus outline but keep accessibility */
+button:focus,
+a:focus {
+    outline: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--royal-blue);
+    outline-offset: 2px;
+}
+
+:root {
+    --royal-blue: #1a237e;
+    --royal-blue-light: #3949ab;
+    --yellow-green: #9ccc65;
+    --yellow-green-light: #cfff95;
+    --background: #f8f9ff;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Source Serif Pro', serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.8;
+    background: var(--background);
+    color: #2c3e50;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* === DARK MODE === */
+body.dark-mode {
+    background: #1f2937;
+    color: #f9fafb;
+}
+
+body.dark-mode .page:not(.note-editor-page) {
+    background: #1f2937;
+    color: #f9fafb;
+}
+
+body.dark-mode .profile-page {
+    background: #111827 !important;
+
+}
+
+body.dark-mode .profile-card,
+body.dark-mode .streak-card,
+body.dark-mode .link-card,
+body.dark-mode .settings-card {
+    background: #374151;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .profile-card h2,
+body.dark-mode .streak-info h3,
+body.dark-mode .link-info h4,
+body.dark-mode .settings-title,
+body.dark-mode .setting-info {
+    color: #f9fafb;
+}
+
+body.dark-mode .profile-card p,
+body.dark-mode .streak-info p,
+body.dark-mode .link-info p {
+    color: #d1d5db;
+}
+
+body.dark-mode .cal-day {
+    background: #4b5563;
+    color: #d1d5db;
+}
+
+/* === FULL PAGE LOADING OVERLAY === */
+.loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(2px);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Light mode - white overlay with full transparency */
+body:not(.dark-mode) .loading-bar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(2px);
+}
+
+/* Dark mode - darker black overlay */
+body.dark-mode .loading-bar {
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(3px);
+}
+
+.loading-bar.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loading-dots {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #000000;
+    animation: bounce 1.4s infinite ease-in-out;
+}
+
+/* Dark mode dots - white */
+body.dark-mode .dot {
+    background: #ffffff;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+body.dark-mode .cal-day.active {
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    color: #ffffff;
+}
+
+body.dark-mode .edit-icon-btn {
+    background: #4b5563;
+    color: #d1d5db;
+}
+
+body.dark-mode .edit-icon-btn:hover {
+    background: #6b7280;
+    color: #667eea;
+}
+
+body.dark-mode .input-field {
+    background: #4b5563;
+    border-color: #6b7280;
+    color: #f9fafb;
+}
+
+body.dark-mode .avatar-fallback {
+    color: #9ca3af;
+}
+
+body.dark-mode .setting-item {
+    border-bottom-color: #4b5563;
+}
+
+body.dark-mode .calendar-grid::-webkit-scrollbar-track {
+    background: #374151;
+}
+
+body.dark-mode .calendar-grid::-webkit-scrollbar-thumb {
+    background: #6b7280;
+}
+
+/* Dark mode for menu */
+body.dark-mode .bottom-menu {
+    background: rgba(31, 41, 55, 0.9);
+}
+
+body.dark-mode .menu-item {
+    color: #9ca3af;
+}
+
+body.dark-mode .menu-item.active {
+    color: #667eea;
+}
+
+body.dark-mode #bibleContent {
+    background: transparent;
+    color: #f9fafb;
+}
+
+body.dark-mode #bibleContent .verse {
+    color: #e5e7eb;
+    border-bottom-color: #374151;
+}
+
+body.dark-mode #bibleContent .verse strong {
+    color: #9ca3af;
+}
+
+/* Dark mode for Bible page elements */
+body.dark-mode .bible-page {
+    background: #1f2937;
+}
+
+body.dark-mode .bible-content {
+    background: transparent;
+}
+
+/* Dark mode search icon */
+body.dark-mode .search-trigger {
+    color: #f9fafb;
+}
+
+body.dark-mode .search-trigger:hover {
+    color: #e5e7eb;
+}
+
+body.dark-mode .search-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .search-wrapper {
+    background: #1f2937;
+}
+
+body.dark-mode .search-input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+
+body.dark-mode .search-icon {
+    color: #9ca3af;
+}
+
+body.dark-mode .search-input {
+    color: #ffffff;
+}
+
+body.dark-mode .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .close-search {
+    color: #9ca3af;
+}
+
+body.dark-mode .search-suggestions {
+    background: #1f2937;
+}
+
+body.dark-mode .suggestion-item {
+    border-bottom-color: #374151;
+}
+
+body.dark-mode .suggestion-item:hover {
+    background: #374151;
+}
+
+body.dark-mode .suggestion-title {
+    color: #667eea;
+}
+
+body.dark-mode .suggestion-preview {
+    color: #9ca3af;
+}
+
+body.dark-mode .bible-header h1,
+body.dark-mode #bookTitle {
+    color: #f9fafb;
+}
+
+body.dark-mode .book-selector {
+    background: linear-gradient(135deg, #374151, #1f2937);
+    color: #f9fafb;
+    border-color: #4b5563;
+}
+
+body.dark-mode .book-selector:hover {
+    background: linear-gradient(135deg, #4b5563, #374151);
+}
+
+body.dark-mode .chapter-nav {
+    background: #374151;
+    color: #f9fafb;
+}
+
+body.dark-mode .chapter-nav:hover {
+    background: #4b5563;
+}
+
+body.dark-mode .version-trigger,
+body.dark-mode .search-trigger {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+body.dark-mode .version-trigger:hover,
+body.dark-mode .search-trigger:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+body.dark-mode .book-modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .modal-content {
+    background: #1f2937;
+}
+
+body.dark-mode .modal-title {
+    color: #f9fafb;
+}
+
+body.dark-mode .tab-btn {
+    color: #d1d5db;
+    background: #374151;
+}
+
+body.dark-mode .tab-btn.active {
+    background: #667eea;
+    color: #ffffff;
+}
+
+body.dark-mode .book-item,
+body.dark-mode .chapter-item {
+    background: #374151;
+    color: #f9fafb;
+}
+
+body.dark-mode .book-item:hover,
+body.dark-mode .chapter-item:hover {
+    background: #4b5563;
+}
+
+body.dark-mode .chapter-item.active {
+    background: #667eea;
+    color: #ffffff;
+}
+
+body.dark-mode .version-modal-content {
+    background: #1f2937;
+}
+
+body.dark-mode .version-modal-header {
+    border-bottom-color: #374151;
+}
+
+body.dark-mode .version-modal-header h3 {
+    color: #f9fafb;
+}
+
+body.dark-mode .close-version-modal {
+    color: #d1d5db;
+}
+
+body.dark-mode .close-version-modal:hover {
+    color: #f9fafb;
+}
+
+body.dark-mode .version-item {
+    color: #f9fafb;
+}
+
+body.dark-mode .version-item:hover {
+    background: #374151;
+}
+
+body.dark-mode .version-item.active {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(90, 19, 128, 0.2));
+    border-color: #667eea;
+}
+
+body.dark-mode .version-name {
+    color: #f9fafb;
+}
+
+body.dark-mode .version-item.active .version-name {
+    color: #667eea;
+}
+
+body.dark-mode .version-desc {
+    color: #9ca3af;
+}
+
+body.dark-mode .profile-menu-icon,
+body.dark-mode .edit-icon-btn i {
+    color: #f9fafb;
+}
+
+body.dark-mode .profile-menu-photo {
+    border-color: #4b5563;
+}
+
+#content {
+    padding: 20px;
+    min-height: calc(100vh - 70px);
+}
+
+#content:has(.note-editor-page) {
+    padding: 0;
+}
+
+.content-container {
+    padding: 20px;
+    padding-bottom: 80px;
+    /* Space for bottom menu */
+    min-height: calc(100vh - 70px);
+    animation: fadeIn 0.3s ease-in;
+}
+
+.content-container:has(.note-editor-page) {
+    padding: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page.note-editor-page {
+    max-width: none;
+    margin: 0;
+    width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+}
+
+h1 {
+    text-align: center;
+    color: #222;
+}
+
+/* Update book title styling */
+#bookTitle {
+    font-family: 'Eagle Lake', cursive;
+    font-size: 2.2rem;
+    color: var(--royal-blue);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+.card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(26, 35, 126, 0.08);
+    padding: 24px;
+    margin-top: 20px;
+    border-left: 4px solid var(--royal-blue);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card h2 {
+    color: var(--royal-blue);
+    margin-top: 0;
+}
+
+.ref {
+    color: var(--royal-blue-light);
+    font-style: italic;
+}
+
+#bible-form {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+#bible-form input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+#bible-form input:focus {
+    border-color: var(--royal-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+#bible-form button {
+    background: var(--royal-blue);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+}
+
+#bible-form button:hover {
+    background: var(--royal-blue-light);
+    transform: translateY(-1px);
+}
+
+.verse-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.verse-actions button {
+    background: var(--royal-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.verse-actions button:hover {
+    background: var(--royal-blue-light);
+    transform: translateY(-1px);
+}
+
+.card.context {
+    background: #f8f9ff;
+    border-left: 4px solid var(--yellow-green);
+}
+
+.card.error {
+    border-left: 4px solid #ff4444;
+}
+
+.info {
+    background: var(--royal-blue-light);
+    color: white;
+    border-left: 4px solid var(--royal-blue);
+}
+
+.info h3 {
+    color: white;
+    margin-top: 0;
+}
+
+.recent-items {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.recent-items button {
+    background: var(--royal-blue-light);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.recent-items button:hover {
+    background: var(--royal-blue);
+    transform: translateY(-1px);
+}
+
+.verse {
+    font-size: clamp(16px, 4vw, 28px);
+    line-height: 1.6;
+}
+
+.bible-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(26, 35, 126, 0.1);
+}
+
+.form-select {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: var(--royal-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+.search-container {
+    margin-bottom: 24px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--royal-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+}
+
+.search-results {
+    position: absolute;
+    width: calc(100% - 40px);
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 8px;
+    display: none;
+    z-index: 1000;
+}
+
+.search-result {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-result:hover {
+    background: var(--background);
+}
+
+.result-reference {
+    font-family: var(--font-heading);
+    color: var(--royal-blue);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.result-text {
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.verse {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Enhanced Search Styles */
+.search-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.search-input:focus {
+    border-color: var(--royal-blue);
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+    outline: none;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    margin-top: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: #f8f9ff;
+}
+
+.suggestion-title {
+    color: var(--royal-blue);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.suggestion-preview {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.suggestion-item strong {
+    background: #fff3cd;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+/* Bible Page Specific Styles */
+.bible-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+    padding-top: 40px;
+}
+
+.version-select {
+    position: fixed;
+    top: 20px;
+    /* adjust as needed */
+    right: 20px;
+    padding: 1px 10px;
+    border-radius: 50px;
+    border: 2px solid var(--royal-blue);
+    background: linear-gradient(145deg, #ffffff, #f0f4ff);
+    font-size: 1rem;
+    color: var(--royal-blue);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.version-select:hover {
+    background: linear-gradient(145deg, #f9fbff, #e3eaff);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.version-select:focus {
+    border-color: #003cff;
+    box-shadow: 0 0 0 4px rgba(0, 60, 255, 0.1);
+}
+
+.floating-controls {
+    position: fixed;
+    bottom: 70px;
+    /* ✅ mababa sa mobile */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    max-width: 90%;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-radius: 0;
+    /* flat sa mobile */
+    transition: all 0.3s ease;
+    z-index: 1100;
+}
+
+/* ✅ kapag mas malaki screen (tablet/desktop) */
+@media screen and (min-width: 600px) {
+    .floating-controls {
+        bottom: 110px;
+        border-radius: 50px;
+    }
+}
+
+/* Ensure floating controls always above menu on all screen sizes */
+@media screen and (max-width: 599px) {
+    .floating-controls {
+        bottom: 90px;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 767px) {
+    .floating-controls {
+        bottom: 130px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .floating-controls {
+        bottom: 140px;
+    }
+}
+
+.book-selector {
+    background: var(--royal-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    /* Add minimum width */
+    justify-content: center;
+    /* Center the text */
+    min-width: 180px;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.book-selector span {
+    margin: 0 4px;
+}
+
+.chapter-controls {
+    display: flex;
+    align-items: center;
+    gap: px;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation button styles (modern glass-like shadow) */
+.chapter-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 14px;
+    height: 42px;
+    border: none;
+    /* 🧹 removed blue border */
+    border-radius: 20px;
+    background: #ffffff;
+    color: #5a1380;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    /* 🌫️ soft natural shadow */
+}
+
+/* Hover effect — slightly lifted */
+.chapter-nav:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+    /* ✨ deeper shadow on hover */
+}
+
+
+.chapter-nav:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.chapter-nav span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+#currentChapter {
+    font-weight: 600;
+    color: var white;
+}
+
+.book-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 10000;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 30px 30px 0 0;
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    animation: goUp 0.3s ease-out forwards;
+    touch-action: none;
+    /* prevent scroll interference */
+}
+
+.drag-handle {
+    width: 60px;
+    height: 6px;
+    background: #ccc;
+    border-radius: 3px;
+    margin: 0 auto 10px;
+}
+
+@keyframes goUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes goDown {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.modal-content.closing {
+    animation: goDown 0.3s ease-in forwards;
+}
+
+.testament-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    justify-content: center;
+    padding: 8px;
+    background: rgba(32, 16, 105, 0.188);
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    background: #f0f0f0;
+    font-size: 1rem;
+}
+
+.tab-btn.active {
+    background: var(--royal-blue);
+    color: white;
+}
+
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+/* Old book-item styles removed - now using styles from modal-list section */
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Adjust content padding to account for floating controls */
+.bible-content {
+    padding-bottom: 160px;
+}
+
+/* Chapter Modal Styles */
+.chapter-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    padding: 16px;
+}
+
+.chapter-item {
+    padding: 16px;
+    text-align: center;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.chapter-item:hover {
+    background: var(--royal-blue-light);
+    color: white;
+}
+
+.chapter-item.active {
+    background: var(--royal-blue);
+    color: white;
+}
+
+.chapter-selector {
+    background: none;
+    border: none;
+    font-weight: 600;
+    color: var(--royal-blue);
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Floating Action Buttons */
+.daily-verse-container {
+    position: relative;
+    min-height: 300px;
+}
+
+.floating-actions {
+    position: fixed;
+    right: 20px;
+    top: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.float-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.float-btn i {
+    font-size: 1.2rem;
+}
+
+.float-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.float-btn.heart i {
+    color: #e74c3c;
+}
+
+.float-btn.bible i {
+    color: #3498db;
+}
+
+.float-btn.save i {
+    color: #2ecc71;
+}
+
+.float-btn.hearted {
+    background: #e74c3c;
+}
+
+.float-btn.hearted i {
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    .floating-actions {
+        right: 10px;
+    }
+
+    .float-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .float-btn i {
+        font-size: 1.1rem;
+    }
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .book-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chapter-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .floating-controls {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .book-selector {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    #bookTitle {
+        font-size: 1.8rem;
+    }
+
+    .verse {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .book-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .chapter-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .book-item {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .chapter-item {
+        padding: 12px 8px;
+    }
+
+    .floating-controls {
+        padding: 8px;
+        gap: 6px;
+    }
+
+    .book-selector {
+        min-width: 140px;
+        /* Smaller minimum width for mobile */
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .chapter-controls {
+        padding: 6px 12px;
+    }
+
+    .version-select {
+        font-size: 0.9rem;
+        padding: 2px;
+    }
+
+    #bookTitle {
+        font-size: 1.5rem;
+    }
+
+    .bible-content {
+        padding: 10px;
+        padding-bottom: 140px;
+    }
+
+    .verse {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Update Chapter Modal Styles */
+.modal-list {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Book List - 2 Column Layout */
+.modal-list.book-mode {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+/* Chapter List - Multi Column Grid */
+.modal-list.chapter-mode {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+/* Book Item Styles - Different from Chapters */
+.book-item {
+    background: linear-gradient(135deg, #ffffff, #f8f9ff);
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.book-item:hover {
+    background: linear-gradient(135deg, #5a1380, #6c1b99);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(90, 19, 128, 0.3);
+    border-color: #5a1380;
+}
+
+/* Chapter Item Styles - Different from Books */
+.chapter-item {
+    background: #f8f9ff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.chapter-item:hover {
+    background: #5a1380;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(90, 19, 128, 0.2);
+}
+
+.chapter-item.active {
+    background: #5a1380;
+    color: white;
+    border-color: #5a1380;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) and (min-width: 481px) {
+    .modal-list.chapter-mode {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-list.book-mode {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .modal-list.chapter-mode {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 15px;
+    }
+
+    .book-item {
+        padding: 14px 10px;
+        border-radius: 14px;
+        font-size: 0.9rem;
+    }
+
+    .chapter-item {
+        padding: 12px 8px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+}

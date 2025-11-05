@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible - Bible App</title>
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bible.css">
+    <link rel="stylesheet" href="../css/bible-version-modal.css">
+</head>
+
+<body>
+    <section class="page bible-page">
+
+
+        <!-- Add Search Overlay -->
+        <div class="search-overlay" id="searchOverlay">
+            <div class="search-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" id="bibleSearch" class="search-input"
+                    placeholder="Search book, chapter:verse or any text...">
+                <button class="close-search" onclick="toggleSearch()">
+                    <i class="bi bi-x"></i>
+                </button>
+                <div id="searchSuggestions" class="search-suggestions"></div>
+            </div>
+        </div>
+        <!-- Add Search Trigger Button -->
+        <button class="search-trigger" onclick="toggleSearch()">
+            <i class="bi bi-search"></i>
+        </button>
+
+        <!-- Version Selector Button -->
+        <button class="version-trigger" id="versionTrigger">
+            <span id="currentVersion">NIV</span>
+            <i class="bi bi-chevron-down"></i>
+        </button>
+
+        <!-- Hidden select for compatibility -->
+        <select id="bibleVersion" style="display: none;">
+            <option value="NIV">NIV</option>
+            <option value="NASB">NASB</option>
+            <option value="CSB">CSB</option>
+            <option value="ESV">ESV</option>
+            <option value="KJV">KJV</option>
+            <option value="NLT">NLT</option>
+            <option value="NKJV">NKJV</option>
+            <option value="MBBTAG12">MBBTAG12</option>
+            <option value="ASND">ASND</option>
+            <option value="KAPAMPANGAN">Kapampangan</option>
+            <option value="CEBUANO">Cebuano</option>
+        </select>
+
+        <div class="bible-header">
+            <h1 id="bookTitle">Loading...</h1>
+        </div>
+
+        <div id="bibleContent" class="bible-content">
+            <div class="loading">Loading Bible...</div>
+        </div>
+
+        <!-- Unified Modal - Add data-mode attribute -->
+        <div id="unifiedModal" class="book-modal" data-mode="book">
+            <div class="modal-content">
+                <div id="modalTitle" class="modal-title">Select Book</div>
+                <div id="testamentTabs" class="testament-tabs">
+                    <button class="tab-btn active" data-testament="old">Lumang Tipan</button>
+                    <button class="tab-btn" data-testament="new">Bagong Tipan</button>
+                </div>
+                <div id="modalList" class="modal-list"></div>
+            </div>
+        </div>
+
+        <!-- Version Modal -->
+        <div id="versionModal" class="version-modal">
+            <div class="version-modal-content">
+                <div class="version-modal-header">
+                    <h3>Select Version</h3>
+                    <button class="close-version-modal" id="closeVersionModal">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+                <div class="version-list">
+                    <button class="version-item" data-version="NIV">
+                        <span class="version-name">NIV</span>
+                        <span class="version-desc">New International Version</span>
+                    </button>
+                    <button class="version-item" data-version="NASB">
+                        <span class="version-name">NASB</span>
+                        <span class="version-desc">New American Standard Bible</span>
+                    </button>
+                    <button class="version-item" data-version="CSB">
+                        <span class="version-name">CSB</span>
+                        <span class="version-desc">Christian Standard Bible</span>
+                    </button>
+                    <button class="version-item" data-version="ESV">
+                        <span class="version-name">ESV</span>
+                        <span class="version-desc">English Standard Version</span>
+                    </button>
+                    <button class="version-item" data-version="KJV">
+                        <span class="version-name">KJV</span>
+                        <span class="version-desc">King James Version</span>
+                    </button>
+                    <button class="version-item" data-version="NLT">
+                        <span class="version-name">NLT</span>
+                        <span class="version-desc">New Living Translation</span>
+                    </button>
+                    <button class="version-item" data-version="NKJV">
+                        <span class="version-name">NKJV</span>
+                        <span class="version-desc">New King James Version</span>
+                    </button>
+                    <button class="version-item" data-version="MBBTAG12">
+                        <span class="version-name">MBBTAG12</span>
+                        <span class="version-desc">Tagalog Bible</span>
+                    </button>
+                    <button class="version-item" data-version="ASND">
+                        <span class="version-name">ASND</span>
+                        <span class="version-desc">Ang Salita ng Diyos</span>
+                    </button>
+                    <button class="version-item" data-version="KAPAMPANGAN">
+                        <span class="version-name">Kapampangan</span>
+                        <span class="version-desc">Kapampangan Bible</span>
+                    </button>
+                    <button class="version-item" data-version="CEBUANO">
+                        <span class="version-name">Cebuano</span>
+                        <span class="version-desc">Cebuano Bible</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Controls -->
+        <div class="floating-controls">
+            <button id="prevChapter" class="chapter-nav">
+                <i class="bi bi-chevron-left"></i>
+                <span id="prevChapterText"></span>
+            </button>
+
+            <button id="selectBookChapter" class="book-selector">
+                <span id="currentBook">Genesis</span>
+                <span id="currentChapter">1</span>
+            </button>
+
+            <button id="nextChapter" class="chapter-nav">
+                <span id="nextChapterText"></span>
+                <i class="bi bi-chevron-right"></i>
+            </button>
+
+        </div>
+    </section>
+
+    <!-- JS -->
+    <script src="../js/bible.js"></script>
+    <script src="../js/shared-greeting.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show greeting after a short delay
+            setTimeout(showPageGreeting, 500);
+        });
+    </script>
+</body>
+
+</html>
